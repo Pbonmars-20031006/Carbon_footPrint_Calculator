@@ -4,7 +4,8 @@ A Carbon Foot Print calculator. Has intutive designs.
 Built using proper folder structure.
 #### Features
 - A precise carbon foot print calculator.
-- Includes Pie charts as swell score comparison.
+- Includes Pie charts as well as score comparison.
+- A systematic form to input data.
 - User can view previous calculations which get automatically stored using localised storage (hive).
 - Options for adding title to each calculations given
 
