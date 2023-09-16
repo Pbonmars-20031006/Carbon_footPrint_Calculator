@@ -3,11 +3,13 @@ import 'dart:ui';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:carbonfootprint/themes/fontStyle.dart';
 import 'package:carbonfootprint/widgets/bottomModalSheet.dart';
-import 'package:circular_chart_flutter/circular_chart_flutter.dart';
+import 'package:carbonfootprint/widgets/bottomModalSheet2.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -28,9 +30,12 @@ class _homeScreenState extends State<homeScreen> {
   double flightsLessThanFourHours = 0;
   bool isRecycleNewspaper = false;
   bool isRecycleAluminium = true;
+  final userData = Hive.box("usersData");
+
+  var data;
 
   void handleLanguageSelected2(double oB, double mG, double eB, double cM,
-      double fg4, double fl4, bool rN, bool rA) {
+      double fg4, double fl4, bool rN, bool rA, String title) {
     setState(() {
       electricityBill = eB;
       monthlyGas = mG;
@@ -50,11 +55,11 @@ class _homeScreenState extends State<homeScreen> {
     print(rA);
     print(rN);
 
-    calScore(oB, mG, eB, cM, fg4, fl4, rN, rA);
+    calScore(oB, mG, eB, cM, fg4, fl4, rN, rA, title);
   }
 
   void calScore(double oB, double mG, double eB, double cM, double fg4,
-      double fl4, bool rN, bool rA) {
+      double fl4, bool rN, bool rA, String title) {
     setState(() {
       score = (eB * 105 +
           mG * 105 +
@@ -66,6 +71,19 @@ class _homeScreenState extends State<homeScreen> {
           (rA ? 0 : 166));
     });
     print(score);
+
+    userData.add([
+      eB,
+      mG,
+      oB,
+      cM,
+      fg4,
+      fl4,
+      rN,
+      rA,
+      score,
+      title
+    ]); // to add all the data
   }
 
   _launchURL() async {
@@ -75,10 +93,10 @@ class _homeScreenState extends State<homeScreen> {
     } else {
       throw Exception('Could not launch $url');
     }
-  }
 
-  final GlobalKey<AnimatedCircularChartState> _chartKey =
-      GlobalKey<AnimatedCircularChartState>();
+    //print(userData.containsKey(1000));
+    print(userData.get(0));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,13 +111,38 @@ class _homeScreenState extends State<homeScreen> {
             child: Column(
                 //mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Center(
-                    child: Container(
-                      child: AutoSizeText(
-                        "Your Carbon FootPrint Tracker",
-                        style: fontStyle.fontstyle,
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: Icon(FontAwesomeIcons.bars),
+                        onPressed: () {
+                          showModalBottomSheet(
+                              backgroundColor: Colors.transparent,
+                              enableDrag: true,
+                              context: context,
+                              isScrollControlled: true,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(30)),
+                              ),
+                              builder: (context) => BackdropFilter(
+                                    filter: ImageFilter.blur(
+                                        sigmaX: 10, sigmaY: 10),
+                                    child: bottomModalSheet2(),
+                                  ));
+                          //print(userData.get(0)[9]);
+                        },
+                        color: Colors.white,
                       ),
-                    ),
+                      Center(
+                        child: Container(
+                          child: AutoSizeText(
+                            "Your Carbon FootPrint Tracker",
+                            style: fontStyle.fontstyle,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   score == null
                       ? Column(

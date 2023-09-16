@@ -21,6 +21,7 @@ class _bottomModalSheetState extends State<bottomModalSheet> {
   double fl4 = 0;
   bool rA = false;
   bool rN = false;
+  String title = "Data";
   Color c = Color(0xfff191919);
   Color c1 = Color(0xfff191919);
   Color c2 = Color(0xfff191919);
@@ -76,6 +77,20 @@ class _bottomModalSheetState extends State<bottomModalSheet> {
                                 ),
                               ),
                             ],
+                          ),
+                          CustomTextField(
+                            title: "Title",
+                            onChanged: (value) {
+                              setState(() {
+                                title = (value);
+                              });
+                            },
+                            onTextChanged: (value) {
+                              setState(() {
+                                title = (value);
+                              });
+                            },
+                            hintText: "Title",
                           ),
                           CustomTextField(
                             title: "Monthly Oil Bill",
@@ -292,7 +307,7 @@ class _bottomModalSheetState extends State<bottomModalSheet> {
                           GestureDetector(
                               onTap: () {
                                 widget.onSelected(
-                                    eB, mG, oB, cM, fg4, fl4, rN, rA);
+                                    eB, mG, oB, cM, fg4, fl4, rN, rA, title);
                                 Navigator.pop(context);
                               },
                               child: Container(
@@ -313,4 +328,4 @@ class _bottomModalSheetState extends State<bottomModalSheet> {
 }
 
 typedef ValueCallback = void Function(double eB, double mG, double oB,
-    double cM, double fg4, double fl4, bool rN, bool rA);
+    double cM, double fg4, double fl4, bool rN, bool rA, String title);
